@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glitchy 3D Cube in the Matrix</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Courier New', monospace;
+            color: #0f0;
+        }
+
+        /* Matrix-style background */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .matrix-code {
+            position: absolute;
+            font-size: 16px;
+            color: #0f0;
+            opacity: 0.1;
+            white-space: nowrap;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        /* 3D Cube container */
+        .cube-container {
+            perspective: 1000px;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cube {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            transform-style: preserve-3d;
+            animation: rotate 10s infinite linear;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotateX(0deg) rotateY(0deg);
+            }
+            to {
+                transform: rotateX(360deg) rotateY(360deg);
+            }
+        }
+
+        .cube-face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 2px solid #0f0;
+            box-sizing: border-box;
+            opacity: 0.8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            background-color: rgba(0, 0, 0, 0.7);
+            transition: all 0.1s;
+        }
+
+        /* Glitch effect */
+        .cube-face:hover {
+            filter: blur(2px) drop-shadow(0 0 10px #0f0);
+            transform: translateZ(10px) scale(1.05);
+        }
+
+        /* Positioning each face of the cube */
+        .front  { transform: rotateY(  0deg) translateZ(100px); }
+        .back   { transform: rotateY(180deg) translateZ(100px); }
+        .right  { transform: rotateY( 90deg) translateZ(100px); }
+        .left   { transform: rotateY(-90deg) translateZ(100px); }
+        .top    { transform: rotateX( 90deg) translateZ(100px); }
+        .bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+        /* Matrix-style header */
+        h1 {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-shadow: 0 0 10px #0f0;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <h1>GLITCHY 3D CUBE IN THE MATRIX</h1>
+
+    <div class="matrix-bg" id="matrixBg"></div>
+
+    <div class="cube-container">
+        <div class="cube">
+            <div class="cube-face front">FRONT</div>
+            <div class="cube-face back">BACK</div>
+            <div class="cube-face right">RIGHT</div>
+            <div class="cube-face left">LEFT</div>
+            <div class="cube-face top">TOP</div>
+            <div class="cube-face bottom">BOTTOM</div>
+        </div>
+    </div>
+
+    <script>
+        // Generate Matrix-style falling code
+        const matrixBg = document.getElementById('matrixBg');
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
+
+        function createMatrixCode() {
+            const code = document.createElement('div');
+            code.className = 'matrix-code';
+            code.style.left = Math.random() * 100 + 'vw';
+            code.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            code.style.animationDelay = '-' + (Math.random() * 5) + 's';
+
+            let content = '';
+            for (let i = 0; i < 20; i++) {
+                content += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            code.textContent = content;
+
+            matrixBg.appendChild(code);
+
+            // Remove the element after animation completes
+            setTimeout(() => {
+                code.remove();
+            }, parseFloat(code.style.animationDuration) * 1000);
+        }
+
+        // Generate Matrix code continuously
+        setInterval(createMatrixCode, 100);
+
+        // Add some glitch effects to the cube faces randomly
+        const faces = document.querySelectorAll('.cube-face');
+        setInterval(() => {
+            faces.forEach(face => {
+                if (Math.random() > 0.8) {
+                    face.style.filter = 'blur(' + (Math.random() * 3) + 'px)';
+                    face.style.transform = 'translateZ(' + (Math.random() * 20 - 10) + 'px)';
+                    setTimeout(() => {
+                        face.style.filter = '';
+                        face.style.transform = '';
+                    }, 100);
+                }
+            });
+        }, 500);
+    </script>
+</body>
+</html>
